@@ -4,6 +4,7 @@ from numpy.linalg import norm
 from scipy.integrate import odeint
 from scipy.optimize import root_scalar
 from matplotlib import pyplot as plt
+from scipy.integrate import solve_ivp
 
 # built-in libs
 import gc
@@ -18,12 +19,14 @@ np.set_printoptions(precision=16)  # for high precision debugging
 # NOTE:
 # Matlab error after 1 orbit = 30 nm    (target)
 # Python error after 1 orbit = 50 nm    (good enough?)
-def gauss_jackson_8(ode_sys: callable, y_0: np.ndarray, dy_0: np.ndarray,
-        t_range: np.ndarray, dt: float, conv_max_iter: int = 20,
-        rel_tol: float = 4e-14, abs_tol: float = 4e-16) -> tuple[np.ndarray]:
+def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_0: np.ndarray,
+        dt: float, 
+        conv_max_iter: int = 20, rel_tol: float = 4e-14, abs_tol: float = 4e-16) -> tuple[np.ndarray]:
     '''
     Integrates a system of second-order differential equations
-    using the Gauss-Jackson 8th-order method.
+    using the Gauss-Jackson 8th-order method. The step size is fixed at `dt`.
+
+    The call signature is similar to that of `scipy.integrate.solve_ivp`.
     
     #### Arguments
     
@@ -31,20 +34,17 @@ def gauss_jackson_8(ode_sys: callable, y_0: np.ndarray, dy_0: np.ndarray,
     You do *not* need to convert this to a system of 1st-order ODEs yourself -
     this is done for you internally.
 
-    `y_0` (np.ndarray): initial position (row vector)
-
-    `dy_0` (np.ndarray): initial velocity (row vector)
-
     `t_range` (np.ndarray): 2-tuple giving time at start and last time to calculate up to
     `dt` (float): constant step size in time at each iteration
+
+    `y_0` (np.ndarray): initial position (row vector)
+    `dy_0` (np.ndarray): initial velocity (row vector)
 
     #### Optional Keyword Arguments
 
     `conv_max_iter` (int, default = 10): max number of iterations to try converging predictions
-
-    `abs_tol` (float, default = 1e-15): absolute tolerance for convergence
-
-    `rel_tol` (float, default = 1e-13): relative tolerance for convergence
+    `abs_tol` (float, default = 4e-16): absolute tolerance for convergence
+    `rel_tol` (float, default = 4e-14): relative tolerance for convergence
     
     #### Returns
     
@@ -65,7 +65,7 @@ def gauss_jackson_8(ode_sys: callable, y_0: np.ndarray, dy_0: np.ndarray,
     ode_sys = lambda t, xy, dxy: np.array([
         2 * xy[0] + 3 * dxy[1] + t, 1 - np.sin(dxy[0])])
     # get solution
-    t, xy, dxy, ddxy = gauss_jackson_8(ode_sys, np.array([1, 4]), np.array([2, -1]), np.array([0, 0]), (0, 60), 0.1)
+    t, xy, dxy, ddxy = gauss_jackson_8(ode_sys, (0, 60), np.array([1, 4]), np.array([2, -1]), 0.1)
     # plot graphs
     fig, axs = plt.subplots(1, 2)
     axs[0].plot(t, xy[:, 0], label='$ x(t) $')  # x(t)
@@ -85,7 +85,7 @@ def gauss_jackson_8(ode_sys: callable, y_0: np.ndarray, dy_0: np.ndarray,
     R_0 = 7000                  # 7000 km from centre (~600 km above surface)
     V_0 = np.sqrt(GM / R_0)     # calculated speed for a circular orbit
     # get solution
-    t, r, dr, ddr = gauss_jackson_8(ode_sys, np.array([R_0, 0, 0]), np.array([0, V_0, 0]), (0, 86400), 60)
+    t, r, dr, ddr = gauss_jackson_8(ode_sys, (0, 86400), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60)
     # plot graph
     plt.plot(r[:, 0], r[:, 1])
     plt.show()
@@ -283,6 +283,12 @@ def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = No
     The equation of motion representing the orbit.
 
     r'' = -GM/|r^3| * r + u(t)
+
+    Possible terms to put into u(t) are:
+
+    - thrust: u(t) = m_dot / m * v_rel, in direction of travel (r', unless object can rotate)
+    - atmospheric drag: u(t) = 1/(2m) * C_D(r') * rho(r) * A * |r'| ** 2, in direction of travel
+    - parachute drag
     
     #### Arguments
     
@@ -292,7 +298,8 @@ def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = No
 
     #### Optional Arguments
 
-    `u` (np.ndarray): a control input (thrust divided by mass, in correct direction, kN / kg)
+    `u` (np.ndarray): a control input (net force excluding gravity divided by mass, 
+    in correct direction, kN / kg = km s^-2)
     
     #### Returns
     
@@ -317,7 +324,7 @@ def main():
     # calculate trajectory using GJ8
     print('Calculating trajectory using GJ8...')
     t, y, dy, ddy = gauss_jackson_8(orbital_dynamics,
-        np.array([R_0, 0, 0]), np.array([0, V_0, 0]), (0, 58290), 60)
+        (0, 58290), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60)
 
     # calculate circular orbit position
     print('Calculating trajectory using circular motion...')
@@ -328,7 +335,7 @@ def main():
 
     # calculate orbit with Kepler's equation
     print('Calculating trajectory using Kepler equation...')
-    r_kepler, _v_k, _a_k = calculate_kepler_orbit(np.array([R_0, 0, 0]), np.array([0, V_0, 0]), t)
+    r_kepler, _v_k, _a_k = calculate_kepler_orbit(t, np.array([R_0, 0, 0]), np.array([0, V_0, 0]))
     errors_kepler = [1e6 * np.hypot(r_kepler[i, 0] - y[i, 0], r_kepler[i, 1] - y[i, 1]) \
         for i in range(len(y))]
 

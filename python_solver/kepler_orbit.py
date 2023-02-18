@@ -6,7 +6,7 @@ from scipy.optimize import root_scalar
 GM = 398600.4415  # parameter mu = graviational constant * mass of Earth (km^3 / s^2)
 
 
-def calculate_kepler_orbit(r_0: np.ndarray, v_0: np.ndarray, t_vec: np.ndarray) -> tuple[np.ndarray]:
+def calculate_kepler_orbit(t_vec: np.ndarray, r_0: np.ndarray, v_0: np.ndarray) -> tuple[np.ndarray]:
     '''
     Calculates the position, velocity and acceleration of a body in a
     two-body problem at given time(s) after initial conditions.
@@ -15,9 +15,9 @@ def calculate_kepler_orbit(r_0: np.ndarray, v_0: np.ndarray, t_vec: np.ndarray) 
     
     #### Arguments
     
+    `t_vec` (np.ndarray): array of values of t to compute the positions at
     `r_0` (np.ndarray): initial position (relative to combined COM of system)
     `v_0` (np.ndarray): initial velocity (in frame of COM)
-    `t_vec` (np.ndarray): array of values of t to compute the positions at
     
     #### Returns
     
