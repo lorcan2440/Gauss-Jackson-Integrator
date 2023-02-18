@@ -14,7 +14,7 @@ Refer to these examples:
 
 Example 1. Solve the IVP system $x'' = 2x + 3y' + t$,     &emsp; $y'' = 1 - \sin x'$,     &emsp; $x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$.
 
-```
+```python
 from GJ8 import gauss_jackson_8
 
 # define system: xy[0] is x, xy[1] is y, dxy[0] is dx/dt, dxy[1] is dy/dt
@@ -36,7 +36,7 @@ Example 2. Use the solver to integrate Newton's second law for a gravitational p
 
 $\ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}$,     &emsp; $\mathbf{r}(0) = [7000,0,0]$,     &emsp; $\dot{\mathbf{r}}(0) = [0, \sqrt{GM / 7000}, 0]$
 
-```
+```python
 from GJ8 import gauss_jackson_8
 
 # define system: r is a position vector [x, y, z], k is constant.
@@ -58,7 +58,7 @@ plt.show()
 
 The function in `calculate_kepler_orbit.py` can be used to verify accuracy of free orbits (i.e. no external force), by comparing the numerical result to the analytical elliptical/hyperbolic orbit solution:
 
-```
+```python
 from GJ8 import gauss_jackson_8
 from kepler_orbit import GM, calculate_kepler_orbit
 
