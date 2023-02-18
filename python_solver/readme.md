@@ -8,7 +8,7 @@ Accuracy is now on par with the MATLAB solver - thanks to u/Frankelstner who [he
 
 Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has similar signature to SciPy's ode integrators.
 
-Test latex: to show math inline:  $ {\color{Orange} \begin{Bmatrix} x'' = 2x + 3y' + t \\ y'' = 1 - \sin x' \end{Bmatrix}}, \ \ {\color{Orchid} x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1.} $
+Test latex: to show math inline:  $$ {\color{Orange} \begin{Bmatrix} x'' = 2x + 3y' + t \\ y'' = 1 - \sin x' \end{Bmatrix}}, \ \ {\color{Orchid} x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1.} $$
 
 Refer to these examples:
 
