@@ -12,7 +12,7 @@ Refer to these examples:
 
 Example 1. Solve the IVP system 
 
-<img src="https://latex.codecogs.com/svg.latex?{\color{Orange} \begin{Bmatrix}
+<img src="https://latex.codecogs.com/png.latex?{\color{Orange} \begin{Bmatrix}
 x'' = 2x + 3y' + t \\ 
 y'' = 1 - \sin x'
 \end{Bmatrix}}, \ \ {\color{Orchid} x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1.}" />
@@ -37,7 +37,7 @@ plt.show()
 
 Example 2. Use the solver to integrate Newton's second law for a gravitational potential with a circular orbit:
 
-<img src="https://latex.codecogs.com/svg.latex?{\color{Orange} \ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}}, \ \ {\color{Orchid} \mathbf{r}(0) = \begin{bmatrix}
+<img src="https://latex.codecogs.com/png.latex?{\color{Orange} \ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}}, \ \ {\color{Orchid} \mathbf{r}(0) = \begin{bmatrix}
 7000\\ 
 0\\ 
 0
