@@ -8,20 +8,9 @@ Accuracy is now on par with the MATLAB solver - thanks to u/Frankelstner who [he
 
 Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has similar signature to SciPy's ode integrators.
 
-Where $x = 0$, evaluate $x + 1$, $x=2x+2y+t$, $x'' = 2x + 3y' + t$, 
-
-$$\left\{{x''=2x+3y'+t}\atop{y''=1-\sinx'}\right\},x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$$ 
- 
-Test latex: to show math inline:  $$ x'' = 2x + 3y' + t, \ \ y'' = 1 - \sin x', \ \ x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1. $$
-
 Refer to these examples:
 
-Example 1. Solve the IVP system 
-
-<img src="https://latex.codecogs.com/png.latex?{\color{Orange} \begin{Bmatrix}
-x'' = 2x + 3y' + t \\ 
-y'' = 1 - \sin x'
-\end{Bmatrix}}, \ \ {\color{Orchid} x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1.}" />
+Example 1. Solve the IVP system $$x'' = 2x + 3y' + t$$, $$y'' = 1 - \sin x'$$, $$x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$$.
 
 ```
 from GJ8 import gauss_jackson_8
@@ -43,15 +32,7 @@ plt.show()
 
 Example 2. Use the solver to integrate Newton's second law for a gravitational potential with a circular orbit:
 
-<img src="https://latex.codecogs.com/png.latex?{\color{Orange} \ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}}, \ \ {\color{Orchid} \mathbf{r}(0) = \begin{bmatrix}
-7000\\ 
-0\\ 
-0
-\end{bmatrix}, \ \dot{\mathbf{r}}(0) = \begin{bmatrix}
-0\\ 
-\sqrt{GM / 7000}\\ 
-0
-\end{bmatrix}.}" />
+$$\ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}}$$, $$\mathbf{r}(0) = [7000,0,0]$$, $$\dot{\mathbf{r}}(0) = [0, \sqrt{GM / 7000}, 0]$$
 
 ```
 from GJ8 import gauss_jackson_8
