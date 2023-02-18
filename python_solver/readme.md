@@ -47,7 +47,7 @@ R_0 = 7000                  # 7000 km from centre (~600 km above surface)
 V_0 = np.sqrt(GM / R_0)     # calculated speed for a circular orbit
 
 # get solution
-t, r, dr, ddr = gauss_jackson_8(ode_sys, np.array([R_0, 0, 0]), np.array([0, V_0, 0]), (0, 86400), 60)
+t, r, dr, ddr = gauss_jackson_8(ode_sys, (0, 86400), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60)
     
 # plot graph
 plt.plot(r[:, 0], r[:, 1])
@@ -67,11 +67,11 @@ V_0 = np.sqrt(GM / R_0)             # choose the speed for a circular orbit: 7.5
 # calculate trajectory using GJ8
 print('Calculating trajectory using GJ8...')
 t, y, dy, ddy = gauss_jackson_8(orbital_dynamics,
-    np.array([R_0, 0, 0]), np.array([0, V_0, 0]), (0, 58290), 60)
+    (0, 58290), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60)
 
 # calculate orbit with Kepler's equation
 print('Calculating trajectory using Kepler equation...')
-r_kepler, _v_k, _a_k = calculate_kepler_orbit(np.array([R_0, 0, 0]), np.array([0, V_0, 0]), t)
+r_kepler, _v_k, _a_k = calculate_kepler_orbit(t, np.array([R_0, 0, 0]), np.array([0, V_0, 0]))
 errors_kepler = [1e6 * np.hypot(r_kepler[i, 0] - y[i, 0], r_kepler[i, 1] - y[i, 1]) \
     for i in range(len(y))]
 
