@@ -2,9 +2,7 @@
 import numpy as np
 from numpy.linalg import norm
 from scipy.integrate import odeint
-from scipy.optimize import root_scalar
 from matplotlib import pyplot as plt
-from scipy.integrate import solve_ivp
 
 # built-in libs
 import gc
