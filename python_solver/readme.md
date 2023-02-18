@@ -10,7 +10,7 @@ Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has s
 
 Refer to these examples:
 
-Example 1. Solve the system <img src="https://render.githubusercontent.com/render/math?math=\color{Orange}\left\{\begin{matrix}x''=2x+3y'+t\\y''=1-\sin(x')\end{matrix}\right"> with initial conditions <img src="https://render.githubusercontent.com/render/math?math=\color{Orange}x(0)=1,x'(0)=2,y(0)=4,y'(0)=-1.">
+Example 1. Solve the system $ \color{Orange} \left \begin{matrix} x'' = 2x + 3y' + t \\ y'' = 1 - \sin x' \end{matrix} \right $ with initial conditions $ \color{Orange} x(0) = 1, x'(0) = 2, y(0) = 4, y'(0) = -1. $
 
 ```
 from GJ8 import gauss_jackson_8
@@ -31,7 +31,7 @@ plt.show()
 ```
 
 Example 2. Use the solver to integrate Newton's second law for a gravitational potential with a circular orbit:
-<img src="https://render.githubusercontent.com/render/math?math=\color{Orange}\bold{r}''=-\frac{GM}{|r|^2}\hat{r}"> with initial conditions <img src="https://render.githubusercontent.com/render/math?math=\color{Orange}\bold{r}(0)=(7000,0,0), \bold{r}'(0)=(0, V_{0}, 0)">
+$ \color{Orange} \bold{r}'' = -\frac{GM}{|\bold{r}|^2} \hat{r} $ with initial conditions $ \color{Orange} \bold{r}(0) = (7000,0,0), \bold{r}'(0) = (0, V_{0}, 0) $.
 
 ```
 from GJ8 import gauss_jackson_8
