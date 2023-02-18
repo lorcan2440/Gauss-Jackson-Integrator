@@ -8,6 +8,8 @@ Accuracy is now on par with the MATLAB solver - thanks to u/Frankelstner who [he
 
 Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has similar signature to SciPy's ode integrators.
 
+Test latex: to show math inline:  $\sqrt{3x-1}+(1+x)^2$
+
 Refer to these examples:
 
 Example 1. Solve the IVP system 

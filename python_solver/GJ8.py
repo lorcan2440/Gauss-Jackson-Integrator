@@ -15,7 +15,7 @@ from kepler_orbit import GM, calculate_kepler_orbit
 np.set_printoptions(precision=16)  # for high precision debugging
 
 
-# NOTE: 
+# NOTE:
 # Matlab error after 1 orbit = 30 nm    (target)
 # Python error after 1 orbit = 50 nm    (good enough?)
 def gauss_jackson_8(ode_sys: callable, y_0: np.ndarray, dy_0: np.ndarray,
