@@ -39,7 +39,7 @@ def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = No
         u = np.zeros_like(y)
     
     mass = 100  # kg
-    drag = (1/2 * 0.50 * 0 * 2.5 * norm(dy) * dy) * 0.001  # kN
+    drag = (1/2 * 0.00 * 0.05 * 2.5 * norm(dy) * dy) * 0.001  # kN  # drag is set to zero for this demo
     
     return (-GM / (norm(y) ** 3)) * y - drag / mass
 

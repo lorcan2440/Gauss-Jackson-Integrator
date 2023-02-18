@@ -47,6 +47,8 @@ def calculate_kepler_orbit(t_vec: np.ndarray, r_0: np.ndarray, v_0: np.ndarray) 
     dSdz = lambda z: 1 / (2 * z) * (C(z) - 3 * S(z))
 
     for i, dt in enumerate(t_vec):
+
+        # definition: d(chi)dt = sqrt(GM) / r  (the Sundmann transformation)
         chi_0 = np.sqrt(GM) * alpha * dt  # Chobotov approximation of universal anomaly chi
         
         # universal Kepler equation
@@ -60,7 +62,7 @@ def calculate_kepler_orbit(t_vec: np.ndarray, r_0: np.ndarray, v_0: np.ndarray) 
             (1 - alpha * r_0m) * x ** 3 * 2 * alpha * x * dSdz(ax2)) - r_0m
 
         # solve universal Kepler equation
-        chi = root_scalar(F_chi, x0=chi_0, fprime=dF_chi, method='newton', xtol=1e-13, rtol=1e-15).root
+        chi = root_scalar(F_chi, x0=chi_0, fprime=dF_chi, method='newton', xtol=1e-15, rtol=1e-15).root
 
         # convert to velocity coordinates
         ax2 = alpha * chi ** 2
