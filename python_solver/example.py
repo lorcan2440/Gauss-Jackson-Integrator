@@ -39,13 +39,9 @@ def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = No
         u = np.zeros_like(y)
     
     mass = 100  # kg
-    rho = 0.05  # kg m^-3
-    area = 2.5  # m^2
-    c_d = 0.50  # -
-
-    drag = 0 * 1/2 * c_d * rho * area * dy ** 2  # kN
+    drag = (1/2 * 0.50 * 0 * 2.5 * norm(dy) * dy) * 0.001  # kN
     
-    return (-GM / (norm(y) ** 3)) * y + drag / mass
+    return (-GM / (norm(y) ** 3)) * y - drag / mass
 
 
 def main():
@@ -60,7 +56,7 @@ def main():
     # calculate trajectory using GJ8
     print('Calculating trajectory using GJ8...')
     t, y, dy, ddy = gauss_jackson_8(orbital_dynamics,
-        (0, 58290), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60)
+        (0, 58290), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60, use_debug=True)
 
     # calculate circular orbit position
     print('Calculating trajectory using circular motion...')

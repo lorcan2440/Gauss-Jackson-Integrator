@@ -4,17 +4,15 @@ from scipy.integrate import odeint
 
 # built-in libs
 import gc
-
-
-np.set_printoptions(precision=16)  # for high precision debugging
+import logging
 
 
 # NOTE:
 # Matlab error after 1 orbit = 30 nm    (target)
 # Python error after 1 orbit = 50 nm    (good enough?)
 def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_0: np.ndarray,
-        dt: float, 
-        conv_max_iter: int = 20, rel_tol: float = 4e-14, abs_tol: float = 4e-16) -> tuple[np.ndarray]:
+        dt: float, conv_max_iter: int = 20, rel_tol: float = 4e-14, abs_tol: float = 4e-16,
+        use_debug: bool = False) -> tuple[np.ndarray]:
     '''
     Integrates a system of second-order differential equations
     using the Gauss-Jackson 8th-order method. The step size is fixed at `dt`.
@@ -38,6 +36,7 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     `conv_max_iter` (int, default = 10): max number of iterations to try converging predictions
     `abs_tol` (float, default = 4e-16): absolute tolerance for convergence
     `rel_tol` (float, default = 4e-14): relative tolerance for convergence
+    `use_debug` (bool, default = False): use a logger to record numerical outputs for debugging.
     
     #### Returns
     
@@ -62,6 +61,23 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     '''
 
     # init - load data
+    if use_debug:
+        np.set_printoptions(precision=16)  # for high precision print debugging
+        fh = logging.FileHandler(filename='python_solver/gj8_logger.log', mode='w', encoding='utf-8')
+        logger = logging.Logger('GJ8 Logger', level=logging.DEBUG)
+        logger.addHandler(fh)
+
+    try:
+        a = np.load('a_matrix.npy')
+        b = np.load('b_matrix.npy')
+    except OSError:
+        try:
+            from arrays import a, b
+        except ImportError as e:
+            raise ImportError('Arrays containing numbers required by the algorithm are missing. '
+            'Ensure that either (`a_matrix.npy` and `b_matrix.npy`) or `arrays.py` are '
+            'stored in the same directory as the `GJ8.py` file.') from e
+
 
     ###############
     ## START UP: ##
@@ -91,21 +107,16 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     # STEP 2: Evaluate nine accelerations from these positions and velocities
     a_startup = np.array([first_order_system(t_start + n * dt, state_startup[n + 4]) \
         for n in np.arange(-4, 5, 1)], dtype=np.longdouble)[:, dims:]
+    
+    if use_debug:
+        logger.debug(f'Calculated initial startup state: \nx = \n{state_startup[:, :dims]}, \n'
+            f'v = \n{state_startup[:, dims:]}, \na = \n{a_startup}')
 
     # STEP 3: Refine startup
     k_ind = np.arange(0, 9, 1)  # (0, 1, 2, ..., 8)  (shifted from (-4, -3, ..., 3, 4))
     y = state_startup[:, :dims]
     dy = state_startup[:, dims:]
     ddy = a_startup
-
-    # load data arrays
-    try:
-        a = np.load('a_matrix.npy')
-        b = np.load('b_matrix.npy')
-    except OSError:
-        a = np.array([[3250433/53222400, 572741/5702400, -8701681/39916800, 4026311/13305600, -917039/3193344, 7370669/39916800, -1025779/13305600, 754331/39916800, -330157/159667200], [-330157/159667200, 530113/6652800, 518887/19958400, -27631/623700, 44773/1064448, -531521/19958400, 109343/9979200, -1261/475200, 45911/159667200], [45911/159667200, -185839/39916800, 171137/1900800, 73643/39916800, -25775/3193344, 77597/13305600, -98911/39916800, 24173/39916800, -3499/53222400], [-3499/53222400, 4387/4989600, -35039/4989600, 90817/950400, -20561/3193344, 2117/9979200, 2059/6652800, -317/2851200, 317/22809600], [317/22809600, -2539/13305600, 55067/39916800, -326911/39916800, 14797/152064, -326911/39916800, 55067/39916800, -2539/13305600, 317/22809600], [317/22809600, -317/2851200, 2059/6652800, 2117/9979200, -20561/3193344, 90817/950400, -35039/4989600, 4387/4989600, -3499/53222400],  [-3499/53222400, 24173/39916800, -98911/39916800, 77597/13305600, -25775/3193344, 73643/39916800, 171137/1900800, -185839/39916800, 45911/159667200], [45911/159667200, -1261/475200, 109343/9979200, -531521/19958400, 44773/1064448, -27631/623700, 518887/19958400, 530113/6652800, -330157/159667200], [-330157/159667200, 754331/39916800, -1025779/13305600, 7370669/39916800, -917039/3193344, 4026311/13305600, -8701681/39916800, 572741/5702400, 3250433/53222400], [3250433/53222400, -11011481/19958400, 6322573/2851200, -8660609/1663200, 25162927/3193344, -159314453/19958400, 18071351/3326400, -24115843/9979200, 103798439/159667200]])
-        b = np.array([[19087/89600, -427487/725760, 3498217/3628800, -500327/403200, 6467/5670, -2616161/3628800, 24019/80640, -263077/3628800, 8183/1036800], [8183/1036800, 57251/403200, -1106377/3628800, 218483/725760, -69/280, 530177/3628800, -210359/3628800, 5533/403200, -425/290304], [-425/290304, 76453/3628800, 5143/57600, -660127/3628800, 661/5670, -4997/80640, 83927/3628800, -19109/3628800, 7/12800], [7/12800, -23173/3628800, 29579/725760, 2497/57600, -2563/22680, 172993/3628800, -6463/403200, 2497/725760, -2497/7257600], [-2497/7257600, 1469/403200, -68119/3628800, 252769/3628800, 0, -252769/3628800, 68119/3628800, -1469/403200, 2497/7257600], [2497/7257600, -2497/725760, 6463/403200, -172993/3628800, 2563/22680, -2497/57600, -29579/725760, 23173/3628800, -7/12800], [-7/12800, 19109/3628800, -83927/3628800, 4997/80640, -661/5670, 660127/3628800, -5143/57600, -76453/3628800, 425/290304], [425/290304, -5533/403200, 210359/3628800, -530177/3628800, 69/280, -218483/725760, 1106377/3628800, -57251/403200, -8183/1036800], [-8183/1036800, 263077/3628800, -24019/80640, 2616161/3628800, -6467/5670, 500327/403200, -3498217/3628800, 427487/725760, -19087/89600], [25713/89600, -9401029/3628800, 5393233/518400, -9839609/403200, 167287/4536, -135352319/3628800, 10219841/403200, -40987771/3628800, 3288521/1036800]])
-
     old_acc = ddy  # use old_acc as the old acc, ddy as the new acc
     # while accelerations have not converged...
 
@@ -145,8 +156,13 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
         # calculate new ddy based on force model
         t_array = np.linspace(t_start - 4 * dt, t_start + 4 * dt, 9)
         ddy = np.array([ode_sys(t_array[n], y[n], dy[n]) for n in k_ind])
+    
+        if use_debug:
+            logger.debug(f'=======\nConverging startup state: iteration {_}, got \nx = \n{y}, \nv = \n{dy}, \na = \n{ddy}, \nDa = \n{ddy - old_acc}')
 
-        if np.allclose(old_acc, ddy, rtol=rel_tol, atol=abs_tol):
+        if np.allclose(ddy, old_acc, atol=abs_tol, rtol=rel_tol):
+            if use_debug:
+                logger.debug(f'Converged because \n{np.abs(ddy - old_acc)} is smaller than \n{abs_tol + rel_tol * np.abs(old_acc)}')
             break
 
     else:
@@ -155,6 +171,9 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     # at this point we have a full set of accurate (y, dy, ddy) for n = (-4, -3, ..., 3, 4)
     # we are now at time n = 4 (from epoch) or equivalently i = 8 (from first calculation)
     i = 8  # corresponding index in our arrays
+
+    if use_debug:
+        logger.debug(f'=====================================================================\nStartup state established: \nx = \n{y}, \nv = \n{dy}, \na = \n{ddy}')
 
     # initialise large arrays to zeroes
     num_steps = round(np.ceil((t_stop - t_start) / dt))
@@ -195,7 +214,8 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
         i += 1
 
         # STEP 10: Refine position and velocity
-        old_y, old_dy = y[i], dy[i]
+        if use_debug:
+            logger.debug(f'=====================================================================\nCalculated initial iteration state at time {i - 4} from epoch: got \nx = \n{y[i]}, \nv = \n{dy[i]}, \na = \n{ddy[i]}')
 
         # calculate sums
         b_sum = sum([b[8, k] * ddy[i - 8 + k] for k in k_ind[:-1]])
@@ -216,8 +236,12 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
             dy[i] = dt * (s[i] + b_sum + b_sum_last)
             y[i] = dt ** 2 * (S[i] + a_sum + a_sum_last)
 
-            if np.allclose(old_y,   y[i], rtol=rel_tol, atol=abs_tol) and \
-               np.allclose(old_dy, dy[i], rtol=rel_tol, atol=abs_tol):
+            if use_debug:
+                logger.debug(f'=======\nConverging state at time step {i - 4} from epoch: iteration {_}, got \nx = \n{y[i]}, \nv = \n{dy[i]}, \na = \n{ddy[i]}, \nDx = {y[i] - old_y}, \nDv = {dy[i] - old_dy}')
+
+            if np.allclose(y[i], old_y, atol=abs_tol, rtol=rel_tol) and np.allclose(dy[i], old_dy, atol=abs_tol, rtol=rel_tol):
+                if use_debug:
+                    logger.debug(f'Converged for time step {i - 4} from epoch because {np.abs(y[i] - old_y)} < {abs_tol + rel_tol * np.abs(old_y)} and {np.abs(dy[i] - old_dy)} < {abs_tol + rel_tol * np.abs(old_dy)}')
                 break
 
             # calculate ddy
@@ -228,10 +252,8 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
 
     # All done with iteration - remove pre-epoch parts of arrays
     t, y, dy, ddy = t[4:], y[4:], dy[4:], ddy[4:]
-    
-    # clear s and S from memory
-    del s, S
-    gc.collect()
+    if use_debug:
+        logger.debug('=====================================================================\nFinished iteration because end time was reached.')
 
-    # return
+    # Finished - return time, position, velocity and acceleration arrays
     return (t, y, dy, ddy)
