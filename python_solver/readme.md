@@ -4,6 +4,8 @@ Accuracy is now on par with the MATLAB solver - thanks to u/Frankelstner who [he
 
 ![image](Figure_1.png)
 
+Over 10 orbital periods at a distance 7000 km (altitude ~650 km), the error is approximately 1 micrometre!
+
 ## How to use
 
 Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has similar signature to SciPy's ode integrators.
