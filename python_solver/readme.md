@@ -4,7 +4,7 @@ Accuracy is now on par with the MATLAB solver - thanks to u/Frankelstner who [he
 
 ![image](Figure_1.png)
 
-Over 10 orbital periods at a distance 7000 km (altitude ~650 km), the error is approximately 1 micrometre!
+Over 10 orbital periods at a distance 7000 km (altitude ~650 km), the error is approximately 2 micrometres!
 
 ## How to use
 
