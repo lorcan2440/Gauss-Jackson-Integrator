@@ -19,7 +19,7 @@ from GJ8 import gauss_jackson_8
 ode_sys = lambda t, xy, dxy: np.array([2 * xy[0] + 3 * dxy[1] + t,
                                        1 - np.sin(dxy[0])])
 # get solution
-t, xy, dxy, ddxy = gauss_jackson_8(ode_sys, np.array([1, 4]), np.array([2, -1]), np.array([0, 0]), (0, 60), 0.1)
+t, xy, dxy, ddxy = gauss_jackson_8(ode_sys, (0, 60), np.array([1, 4]), np.array([2, -1]), 0.1)
 
 # plot graphs
 fig, axs = plt.subplots(1, 2)
