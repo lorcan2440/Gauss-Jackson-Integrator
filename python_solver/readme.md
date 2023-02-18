@@ -10,7 +10,7 @@ Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has s
 
 Refer to these examples:
 
-Example 1. Solve the IVP system $$x'' = 2x + 3y' + t$$, $$y'' = 1 - \sin x'$$, $$x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$$.
+Example 1. Solve the IVP system $x'' = 2x + 3y' + t$, $y'' = 1 - \sin x'$, $x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$.
 
 ```
 from GJ8 import gauss_jackson_8
@@ -32,7 +32,7 @@ plt.show()
 
 Example 2. Use the solver to integrate Newton's second law for a gravitational potential with a circular orbit:
 
-$$\ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}}$$, $$\mathbf{r}(0) = [7000,0,0]$$, $$\dot{\mathbf{r}}(0) = [0, \sqrt{GM / 7000}, 0]$$
+$\ddot{\mathbf{r}} = -\frac{GM}{|\mathbf{r}|^2} \mathbf{\hat{r}}$, $\mathbf{r}(0) = [7000,0,0]$, $\dot{\mathbf{r}}(0) = [0, \sqrt{GM / 7000}, 0]$
 
 ```
 from GJ8 import gauss_jackson_8
