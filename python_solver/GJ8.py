@@ -58,10 +58,9 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     #### Examples
 
     Example 1. for the system {x'' = 2x + 3y' + t, y'' = 1 - sin(x')}, {x(0) = 1, x'(0) = 2, y(0) = 4, y'(0) = -1}, let:
-    ```
+    ```python
     # define system: xy[0] is x, xy[1] is y
-    ode_sys = lambda t, xy, dxy: np.array([
-        2 * xy[0] + 3 * dxy[1] + t, 1 - np.sin(dxy[0])])
+    ode_sys = lambda t, xy, dxy: np.array([2 * xy[0] + 3 * dxy[1] + t, 1 - np.sin(dxy[0])])
     # get solution
     t, xy, dxy, ddxy = gauss_jackson_8(ode_sys, (0, 60), np.array([1, 4]), np.array([2, -1]), 0.1)
     # plot graphs
@@ -74,7 +73,7 @@ def gauss_jackson_8(ode_sys: callable, t_range: np.ndarray, y_0: np.ndarray, dy_
     ```
 
     Example 2. for the system {r'' = -k/|r|^2 \hat{r}} (2D / 3D gravitation or electrostatics), let:
-    ```
+    ```python
     # define system: r is a position vector [x, y, z], k is constant.
     # For gravity, k = GM; for electrostatics, k = Q/(4 pi epsilon_0)
     ode_sys = lambda t, r, dr: (-GM / (norm(r) ** 3)) * r
