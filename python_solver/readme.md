@@ -10,7 +10,7 @@ Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has s
 
 Where $x = 0$, evaluate $x + 1$, $x=2x+2y+t$, $x'' = 2x + 3y' + t$, 
 
-$$\left\{{x''=2x+3y'+t}\atop{y''=1-\sinx'}\right\}\,x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$$ 
+$$\left\{{x''=2x+3y'+t}\atop{y''=1-\sinx'}\right\},x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$$ 
  
 Test latex: to show math inline:  $$ x'' = 2x + 3y' + t, \ \ y'' = 1 - \sin x', \ \ x(0) = 1, \ y(0) = 4, \ x'(0) = 2, \ y'(0) = -1. $$
 
