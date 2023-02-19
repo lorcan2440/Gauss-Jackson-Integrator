@@ -19,8 +19,6 @@ The definitions are written in ANSI Common Lisp
 (http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) and
 should work with any compliant implementation.
 
-(format t "hello")
-
 ;;; Compile and load
 (compile-file "coefficients")
 (load "coefficients")
@@ -49,8 +47,6 @@ should work with any compliant implementation.
 ||#
 
 (in-package :cl-user)
-
-(format t "hello")
 
 ;;; Generators are functions of a non-negative index that gives the
 ;;; coefficient for that index.  Transformations produce a generator
