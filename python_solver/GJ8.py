@@ -122,8 +122,7 @@ def gauss_jackson_8(
         [
             first_order_system(t_start + n * dt, state_startup[n + 4])
             for n in np.arange(-4, 5, 1)
-        ],
-        dtype=np.longdouble,
+        ]
     )[:, dims:]
 
     if use_debug:
@@ -137,9 +136,8 @@ def gauss_jackson_8(
     y = state_startup[:, :dims]
     dy = state_startup[:, dims:]
     ddy = a_startup
-    old_acc = ddy  # use old_acc as the old acc, ddy as the new acc
+    
     # while accelerations have not converged...
-
     for _ in range(conv_max_iter):
 
         old_acc = ddy.copy()

@@ -56,7 +56,7 @@ def main():
     # calculate trajectory using GJ8
     print('Calculating trajectory using GJ8...')
     t, y, dy, ddy = gauss_jackson_8(orbital_dynamics,
-        (0, 58290), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60, use_debug=True)
+        (0, 5829), np.array([R_0, 0, 0]), np.array([0, V_0, 0]), 60, use_debug=True)
 
     # calculate circular orbit position
     print('Calculating trajectory using circular motion...')
