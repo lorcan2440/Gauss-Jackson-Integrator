@@ -6,7 +6,6 @@ from GJ8 import gauss_jackson_8
 from kepler_orbit import calculate_kepler_orbit, GM
 
 
-
 def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = None) -> np.ndarray:
     '''
     The equation of motion representing the orbit.
