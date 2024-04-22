@@ -46,9 +46,6 @@ def orbital_dynamics(t: float, y: np.ndarray, dy: np.ndarray, u: np.ndarray = No
 
 def main():
 
-    # stylesheet
-    plt.style.use(r'C:\Users\lnick\Documents\Personal\Programming\Python\Resources\proplot_style.mplstyle')
-
     # initial conditions
     R_0 = 7000                          # 7000 km
     V_0 = np.sqrt(GM / R_0)             # choose the speed for a circular orbit: 7.546053290107541 km/s
