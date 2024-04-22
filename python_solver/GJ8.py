@@ -69,7 +69,7 @@ def gauss_jackson_8(
     if use_debug:
         np.set_printoptions(precision=16)  # for high precision print debugging
         fh = logging.FileHandler(
-            filename="python_solver/gj8_logger.log", mode="w", encoding="utf-8"
+            filename="gj8_logger.log", mode="w", encoding="utf-8"
         )
         logger = logging.Logger("GJ8 Logger", level=logging.DEBUG)
         logger.addHandler(fh)
