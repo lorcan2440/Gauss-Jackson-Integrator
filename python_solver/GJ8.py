@@ -56,6 +56,7 @@ def gauss_jackson_8(
     #### References
 
     Implemented by following the algorithm described in:
+    Implementation of Gauss-Jackson Integration for Orbit Propagation
     Berry, Matthew M. & Healy, Liam M. (2004)
     The Journal of the Astronautical Sciences, Vol. 52, No. 3, July-September 2004, pp. 331-357
     https://drum.lib.umd.edu/bitstream/handle/1903/2202/2004-berry-healy-jas.pdf
@@ -148,8 +149,8 @@ def gauss_jackson_8(
         c2 = y[4] / dt**2 - sum([a[4, k] * ddy[k] for k in k_ind]) + c1
 
         # initialise s and S (zeroes)
-        s = np.zeros((9, 3))
-        S = np.zeros((9, 3))
+        s = np.zeros((9, dims))
+        S = np.zeros((9, dims))
 
         # calculate s_0 and S_0 (1x3 vectors)
         s[4] = c1p
@@ -201,7 +202,7 @@ def gauss_jackson_8(
 
     # initialise large arrays to zeroes
     num_steps = round(np.ceil((t_stop - t_start) / dt))
-    extra_zeroes = np.zeros((num_steps - 4, 3))
+    extra_zeroes = np.zeros((num_steps - 4, dims))
     y = np.vstack((y, extra_zeroes))  # y_n = y[i]
     dy = np.vstack((dy, extra_zeroes))  # dy_n = dy[i]
     ddy = np.vstack((ddy, extra_zeroes))  # ddy_n = ddy[i]
