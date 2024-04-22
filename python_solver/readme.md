@@ -12,7 +12,7 @@ Put `GJ8.py` in your working directory. The function `GJ8.gauss_jackson_8` has s
 
 Refer to these examples:
 
-Example 1. Solve the IVP system $x'' = 2x + 3y' + t$,     &emsp; $y'' = 1 - \sin x'$,     &emsp; $x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$.
+Minimal Working Example 1. Solve the IVP system $x'' = 2x + 3y' + t$,     &emsp; $y'' = 1 - \sin x'$,     &emsp; $x(0)=1,y(0)=4,x'(0)=2,y'(0)=-1$.
 
 ```python
 from GJ8 import gauss_jackson_8
